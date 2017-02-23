@@ -1,0 +1,190 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <title>Real Time charts</title>
+    <link href="/css/c3.min.css" rel="stylesheet">
+    <script src="/js/d3.min.js"></script>
+    <script src="/js/c3.min.js"></script>
+</head>
+
+<body>
+        <div id="cpu"></div>
+        <div id="guage_cpu"></div>
+        <div id="guage_ram"></div>
+    
+
+<script>    
+
+    var chart = c3.generate({
+        bindto: '#cpu',
+        padding: {
+            left: 50,
+            right: 50
+        },
+        point: {
+            show: false
+        },
+
+        data: {
+            type: "spline",
+            x: 'x',
+            //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+            columns: [
+                ['x', (new Date().getTime()), (new Date().getTime()) - 10000, (new Date().getTime()), (new Date().getTime()) - 20000, (new Date().getTime()), (new Date().getTime()) - 30000, (new Date().getTime()), (new Date().getTime()) - 40000, (new Date().getTime()), (new Date().getTime()) - 50000, (new Date().getTime()), (new Date().getTime()) - 60000],
+                //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+
+                ['CPU', null, null, null, null, null, null, null],
+                ['RAM', null, null, null, null, null, null, null]
+            ],
+            connectNull: true
+        },
+        axis: {
+            x: {
+                type: 'timeseries',
+                tick: {
+                    format: '%M:%S'
+                },
+                label: {
+                    text: 'Time',
+                    position: 'outer-center',
+                }
+
+            },
+            y: {
+                label: {
+                    text: '%',
+                    position: 'outer-middle',
+                }
+            }
+
+        }
+    });
+
+
+
+    var chart2 = c3.generate({
+        bindto: "#guage_cpu",
+        title: {
+            text: 'CPU'
+        },
+        data: {
+            columns: [
+                ['CPU', 0]
+            ],
+            type: 'gauge',
+            onclick: function (d, i) {
+                console.log("onclick", d, i);
+            },
+            onmouseover: function (d, i) {
+                console.log("onmouseover", d, i);
+            },
+            onmouseout: function (d, i) {
+                console.log("onmouseout", d, i);
+            }
+        },
+        gauge: {
+
+            min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+            max: 100, // 100 is default
+        },
+        color: {
+            pattern: ['#60B044', '#F6C600', '#F97600', '#FF0000'], // the three color levels for the percentage values.
+            threshold: {
+                //            unit: 'value', // percentage is default
+                //            max: 200, // 100 is default
+                values: [30, 60, 90, 100]
+            }
+        },
+        size: {
+            height: 150
+        }
+    });
+
+
+
+
+    var chart3 = c3.generate({
+        bindto: "#guage_ram",
+        title: {
+            text: 'RAM'
+        },
+        data: {
+            columns: [
+                ['RAM', 0]
+            ],
+            type: 'gauge',
+            onclick: function (d, i) {
+                console.log("onclick", d, i);
+            },
+            onmouseover: function (d, i) {
+                console.log("onmouseover", d, i);
+            },
+            onmouseout: function (d, i) {
+                console.log("onmouseout", d, i);
+            }
+        },
+        gauge: {
+            //        label: {
+            //            format: function(value, ratio) {
+            //                return value;
+            //            },
+            //            show: false // to turn off the min/max labels.
+            //        },
+            //    min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+            //    max: 100, // 100 is default
+            //    units: ' %',
+            //    width: 39 // for adjusting arc thickness
+        },
+        color: {
+            pattern: ['#60B044', '#F6C600', '#F97600', '#FF0000'], // the three color levels for the percentage values.
+            threshold: {
+                //            unit: 'value', // percentage is default
+                //            max: 200, // 100 is default
+                values: [30, 60, 90, 100]
+            }
+        },
+        size: {
+            height: 150
+        }
+    });
+
+
+setInterval(function(){
+
+        var rand_val_ram = Math.floor(Math.random()*101);
+        var rand_val_cpu = Math.floor(Math.random()*101);
+        
+        console.log(rand_val_ram);
+        chart.flow({
+            columns: [
+                ['x', (new Date().getTime())],
+                ['CPU', rand_val_cpu],
+                ['RAM', rand_val_ram]
+            ],
+        });
+        chart2.load({
+            columns: [
+                ['CPU', rand_val_cpu]
+            ]
+        });
+        chart3.load({
+            columns: [
+                ['RAM', rand_val_ram]
+            ]
+        });
+
+},1000);
+
+</script>
+
+
+</body>
+
+</html>
